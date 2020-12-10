@@ -11,6 +11,7 @@ android {
         versionCode 20042201
         versionName "1.0.0"
 
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         //Cannot fit requested classes in a single dex file 해결을 위해
