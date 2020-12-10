@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -110,6 +112,13 @@ public class ProductionInFragment extends CommonFragment {
                     if(Utils.isEmpty(location)){
                         requestLocation(barcode, "P");
                     } else {
+                        for(PalletSnanModel.Items item : mItems){
+                            if(barcode.equals(item.getSerial_no())) {
+                                Utils.Toast(mContext, "동일한 팔레트를 선택하셨습니다.");
+                                return;
+                            }
+                        }
+
                         requestPalletScan(barcode);
                     }
                 }
@@ -273,6 +282,7 @@ public class ProductionInFragment extends CommonFragment {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         Call<PalletSnanModel> call = service.postScanPallet("sp_pda_sin_serial_scan", barcode);
+
 
         call.enqueue(new Callback<PalletSnanModel>() {
             @Override

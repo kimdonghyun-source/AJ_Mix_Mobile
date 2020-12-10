@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.util.Date;
 
+import kr.co.ajcc.wms.BuildConfig;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.SharedData;
@@ -227,8 +229,15 @@ public class PalletFragment extends CommonFragment {
         if(ib_bunhal.isSelected()){
             if(bunhalItem!=null) {
                 String bunhalCount = et_bunhal_count.getText().toString();
+                int oriQty = bunhalItem.getWrk_inv_qty(); //재고수량(분할)
+
                 if(bunhalCount==null || Float.parseFloat(bunhalCount) <= 0){
                     Toast.makeText(mContext,"분할수량을 입력하세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(Float.parseFloat(bunhalCount) > oriQty){
+                    Toast.makeText(mContext,"재고수량보다 값이 큽니다.",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mPopup = new TwoBtnPopup(getActivity(), et_bunhal.getText().toString()+" PALLET를 분할 처리 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
@@ -247,8 +256,16 @@ public class PalletFragment extends CommonFragment {
             if(mergeItem1!=null && mergeItem2!=null) {
                 String mergeCount1 = et_merge_count_1.getText().toString();
                 String mergeCount2 = et_merge_count_2.getText().toString();
+                int oriQty1 = mergeItem1.getWrk_inv_qty(); //재고수량1(병합)
+                int oriQty2 = mergeItem2.getWrk_inv_qty(); //재고수량2(병합)
+
                 if(mergeCount1==null || mergeCount2==null || Float.parseFloat(mergeCount1)<=0 || Float.parseFloat(mergeCount2)<=0){
                     Toast.makeText(mContext,"병합수량을 입력하세요.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(Float.parseFloat(mergeCount1) > oriQty1 || Float.parseFloat(mergeCount2) > oriQty2){
+                    Toast.makeText(mContext,"재고수량보다 값이 큽니다.",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -283,14 +300,45 @@ public class PalletFragment extends CommonFragment {
         Bundle args=new Bundle();
         args.putString("SN",sn);
         if(ib_bunhal.isSelected()) {
+            int totalCnt = Integer.parseInt(Utils.nullString(tv_bunhal_count.getText().toString(),"0"));
+            int buhalCnt = Integer.parseInt(Utils.nullString(et_bunhal_count.getText().toString(),"0"));
+            if(totalCnt-buhalCnt <= 0){
+                buhalCnt = 0;
+            } else {
+                buhalCnt = totalCnt-buhalCnt;
+            }
+            args.putString("B_SN", et_bunhal.getText().toString());
             args.putString("ITEMNM", bunhalItem.getItm_name());
             args.putString("ITEMCD", bunhalItem.getItm_code());
             args.putString("CNT", et_bunhal_count.getText().toString());
+            args.putString("QTY", Integer.toString(buhalCnt));
         } else if(ib_merge.isSelected()){
-            float sum = Float.parseFloat(et_merge_count_1.getText().toString()) + Float.parseFloat(et_merge_count_2.getText().toString());
+            int totalCnt = Integer.parseInt(Utils.nullString(tv_merge_count_1.getText().toString(),"0"));
+            int mergeCnt1 = Integer.parseInt(Utils.nullString(et_merge_count_1.getText().toString(),"0"));
+            if(totalCnt-mergeCnt1 <= 0){
+                mergeCnt1 = 0;
+            } else {
+                mergeCnt1 = totalCnt-mergeCnt1;
+            }
+
+            totalCnt = Integer.parseInt(Utils.nullString(tv_merge_count_2.getText().toString(),"0"));
+            int mergeCnt2 = Integer.parseInt(Utils.nullString(et_merge_count_2.getText().toString(),"0"));
+            if(totalCnt-mergeCnt2 <= 0){
+                mergeCnt2 = 0;
+            } else {
+                mergeCnt2 = totalCnt-mergeCnt2;
+            }
+
+            int sum = Integer.parseInt(et_merge_count_1.getText().toString()) + Integer.parseInt(et_merge_count_2.getText().toString());
+            args.putString("B_SN", et_merge_1.getText().toString());
+            args.putString("B_SN_2", et_merge_2.getText().toString());
+
             args.putString("ITEMNM", mergeItem1.getItm_name());
             args.putString("ITEMCD", mergeItem1.getItm_code());
-            args.putString("CNT", Float.toString(sum));
+            args.putString("CNT", Integer.toString(sum));
+
+            args.putString("QTY", Integer.toString(mergeCnt1));
+            args.putString("QTY_2", Integer.toString(mergeCnt2));
         }
         intent.putExtra("args",args);
         startActivity(intent);
@@ -340,16 +388,30 @@ public class PalletFragment extends CommonFragment {
                                     bunhalItem = model.getItems().get(0);
                                     tv_bunhal_product.setText(bunhalItem.getItm_name());
                                     tv_bunhal_product.setSelected(true);
-                                    tv_bunhal_count.setText(Float.toString(bunhalItem.getWrk_inv_qty()));
+                                    tv_bunhal_count.setText(Integer.toString(bunhalItem.getWrk_inv_qty()));
                                     et_bunhal_count.setText("0");
                                     et_bunhal.setText(param);
                                 } else if(ib_merge.isSelected()){
+                                    //시리얼 중복 체크
+                                    if(mergeItem1 != null){
+                                        if(mergeItem1.getSerial_no().equals(model.getItems().get(0).getSerial_no())){
+                                            Utils.Toast(mContext, getString(R.string.error_productOut_check));
+                                            return;
+                                        }
+                                    }
+                                    if(mergeItem2 != null){
+                                        if(mergeItem2.getSerial_no().equals(model.getItems().get(0).getSerial_no())){
+                                            Utils.Toast(mContext, getString(R.string.error_productOut_check));
+                                            return;
+                                        }
+                                    }
+
                                     String merge = et_merge_1.getText().toString();
-                                    if(Utils.isEmpty(merge)){
+                                    if (Utils.isEmpty(merge)) {
                                         mergeItem1 = model.getItems().get(0);
                                         tv_merge_product_1.setText(mergeItem1.getItm_name());
                                         tv_merge_product_1.setSelected(true);
-                                        tv_merge_count_1.setText(Float.toString(mergeItem1.getWrk_inv_qty()));
+                                        tv_merge_count_1.setText(Integer.toString(mergeItem1.getWrk_inv_qty()));
                                         et_merge_count_1.setText("0");
                                         et_merge_1.setText(param);
                                         mergeItem2 = null;
@@ -357,7 +419,7 @@ public class PalletFragment extends CommonFragment {
                                         mergeItem2 = model.getItems().get(0);
                                         tv_merge_product_2.setText(mergeItem2.getItm_name());
                                         tv_merge_product_2.setSelected(true);
-                                        tv_merge_count_2.setText(Float.toString(mergeItem2.getWrk_inv_qty()));
+                                        tv_merge_count_2.setText(Integer.toString(mergeItem2.getWrk_inv_qty()));
                                         et_merge_count_2.setText("0");
                                         et_merge_2.setText(param);
                                     }
@@ -491,13 +553,13 @@ public class PalletFragment extends CommonFragment {
 
         JsonObject merge2 = new JsonObject();
         //시리얼번호
-        merge2.addProperty("serial_no", mergeItem1.getSerial_no());
+        merge2.addProperty("serial_no", mergeItem2.getSerial_no());
         //품목코드
-        merge2.addProperty("itm_code", mergeItem1.getItm_code());
+        merge2.addProperty("itm_code", mergeItem2.getItm_code());
         //창고코드
-        merge2.addProperty("wh_code", mergeItem1.getWh_code());
+        merge2.addProperty("wh_code", mergeItem2.getWh_code());
         //로케이션코드
-        merge2.addProperty("location_code", mergeItem1.getLocation_code());
+        merge2.addProperty("location_code", mergeItem2.getLocation_code());
         //원수량(재고수량)
         merge2.addProperty("ori_qty",Float.toString(mergeItem2.getWrk_inv_qty()));
         //병합수량

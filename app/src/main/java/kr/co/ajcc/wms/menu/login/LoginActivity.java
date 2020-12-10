@@ -82,8 +82,8 @@ public class LoginActivity extends CommonCompatActivity {
         }
 
         //정제영 테스트
-        et_user_id.setText("axlrose");
-        et_pass.setText("1234");
+        //et_user_id.setText("axlrose");
+        //et_pass.setText("1234!");
     }
 
     @Override

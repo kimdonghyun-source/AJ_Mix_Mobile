@@ -31,6 +31,7 @@ public class MainActivity extends CommonCompatActivity {
         findViewById(R.id.bt_menu_5).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_6).setOnClickListener(onClickListener);
         findViewById(R.id.bt_menu_7).setOnClickListener(onClickListener);
+        findViewById(R.id.bt_menu_8).setOnClickListener(onClickListener); //재고실사
         findViewById(R.id.bt_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +46,7 @@ public class MainActivity extends CommonCompatActivity {
             }
         });
     }
+
     private void goLogin(){
         Intent i = new Intent(mContext,LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -76,6 +78,10 @@ public class MainActivity extends CommonCompatActivity {
                     break;
                 case R.id.bt_menu_7:
                     intent.putExtra("menu", Define.MENU_CONFIG);
+                    break;
+
+                case R.id.bt_menu_8:
+                    intent.putExtra("menu", Define.MENU_INVENTORY);
                     break;
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

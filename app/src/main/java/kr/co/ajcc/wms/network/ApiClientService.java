@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import kr.co.ajcc.wms.BuildConfig;
 import kr.co.ajcc.wms.model.CustomerInfoModel;
 import kr.co.ajcc.wms.model.DeliveryOrderModel;
+import kr.co.ajcc.wms.model.InventoryModel;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
 import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
@@ -248,6 +249,25 @@ public interface ApiClientService {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     @POST("R2JsonProc_plt_mrg_save.asp")
     Call<SerialNumberModel> postMakeMergeJunphyo(
+            @Body RequestBody body
+    );
+
+    /**
+     * 재고실사 상세
+     * @param proc 프로시져
+     * @param param1 재고실사번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<InventoryModel> postInventoryScan(
+            @Query("proc") String proc,
+            @Query("param1") String param1
+    );
+
+    //재고실사 전표 생성
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_wms_mod_save.asp")
+    Call<ResultModel> postSendInventory(
             @Body RequestBody body
     );
 

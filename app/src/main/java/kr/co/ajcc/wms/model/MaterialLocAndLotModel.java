@@ -15,7 +15,7 @@ public class MaterialLocAndLotModel extends ResultModel {
 
     public class Items extends ResultModel {
         //입력된 수량(서버에서 받는게 아님)
-        float input_qty;
+        int input_qty;
 
         //품목코드
         String itm_code;
@@ -36,13 +36,14 @@ public class MaterialLocAndLotModel extends ResultModel {
         //불출처명
         String wh_name_out;
         //재고수량
-        float inv_qty;
+        int inv_qty;
+        String serial_no;
 
-        public float getInput_qty() {
+        public int getInput_qty() {
             return input_qty;
         }
 
-        public void setInput_qty(float input_qty) {
+        public void setInput_qty(int input_qty) {
             this.input_qty = input_qty;
         }
 
@@ -118,12 +119,16 @@ public class MaterialLocAndLotModel extends ResultModel {
             this.wh_name_out = wh_name_out;
         }
 
-        public float getInv_qty() {
+        public int getInv_qty() {
             return inv_qty;
         }
 
-        public void setInv_qty(float inv_qty) {
+        public void setInv_qty(int inv_qty) {
             this.inv_qty = inv_qty;
         }
+
+        public String getSerial_no() { return serial_no; }
+
+        public void setSerial_no(String serial_no) { this.serial_no = serial_no; }
     }
 }

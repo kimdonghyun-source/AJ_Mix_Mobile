@@ -69,7 +69,7 @@ public class RegistrationFragment extends CommonFragment {
         list.add("창고 5");
 
         mSpinner =  v.findViewById(R.id.spinner);
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(mContext, list, mSpinner);
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(mContext, list, mSpinner, 0);
         mSpinner.setAdapter(spinnerAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
         mSpinner.setSelection(mSpinnerSelect);

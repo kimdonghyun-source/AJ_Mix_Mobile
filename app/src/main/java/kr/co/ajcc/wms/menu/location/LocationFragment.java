@@ -1,15 +1,18 @@
 package kr.co.ajcc.wms.menu.location;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -133,6 +137,16 @@ public class LocationFragment extends CommonFragment {
                             Utils.Toast(mContext, getString(R.string.error_location_to));
                             return;
                         }
+                        List<LotItemsModel.Items> items = mAdapter.getData();
+                        if(items!=null){
+                            for(LotItemsModel.Items it : items){
+                                if(it.getLot_no().trim().equals(barcode)){
+                                    Toast.makeText(mContext,"중복 스캔 데이터가 있습니다.",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        }
+
                         requestLotItems(fromLocation.getLocation_code(), barcode);
                     }
                 }
@@ -192,6 +206,8 @@ public class LocationFragment extends CommonFragment {
                         Utils.Toast(mContext, getString(R.string.error_location_items));
                         return;
                     }
+
+
                     mTwoBtnPopup = new TwoBtnPopup(getActivity(), et_to.getText().toString()+" 로케이션으로 이동처리를 하시겠습니까?", R.drawable.popup_title_alert, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
@@ -230,19 +246,26 @@ public class LocationFragment extends CommonFragment {
                                     if (msg.what == 1) {
                                         LocationModel.Items item = (LocationModel.Items)msg.obj;
                                         if(cmd == FROM){    //from인 경우에만 재고정보를 조회한다.
-                                            mAdapter.setData(null);
+                                            mAdapter.clearData();
                                             mAdapter.notifyDataSetChanged();
 
                                             fromLocation = item;
                                             et_from.setText(fromLocation.getLocation_code());
                                         }else if(cmd == TO){    //to인 경우엔 from과 같은 창고인지 비교
-                                            mAdapter.setData(null);
+                                            mAdapter.clearData();
                                             mAdapter.notifyDataSetChanged();
 
-                                            if(fromLocation.getWh_code().equals(item.getWh_code())) {
+
+                                            if (fromLocation.getWh_code().equals(item.getWh_code())) {
                                                 toLocation = item;
+
+                                                if(fromLocation.getLocation_code().equals(toLocation.getLocation_code())) {
+                                                    Utils.Toast(mContext, getString(R.string.error_location_check));
+                                                    return;
+                                                }
+
                                                 et_to.setText(toLocation.getLocation_code());
-                                            }else{      //같은 창고가 아니면
+                                            } else {      //같은 창고가 아니면
                                                 mOneBtnPopup = new OneBtnPopup(getActivity(), "같은 창고내에서만 로케이션 이동이 가능합니다.\n로케이션을 확인하세요.", R.drawable.popup_title_alert, new Handler() {
                                                     @Override
                                                     public void handleMessage(Message msg) {
@@ -305,6 +328,12 @@ public class LocationFragment extends CommonFragment {
 
                                 if(fromLocation.getWh_code().equals(model.getItems().get(0).getWh_code())) {
                                     toLocation = model.getItems().get(0);
+
+                                    if(fromLocation.getLocation_code().equals(toLocation.getLocation_code())) {
+                                        Utils.Toast(mContext, getString(R.string.error_location_check));
+                                        return;
+                                    }
+
                                     et_to.setText(toLocation.getLocation_code());
                                 }else{      //같은 창고가 아니면
                                     mOneBtnPopup = new OneBtnPopup(getActivity(), "같은 창고내에서만 로케이션 이동이 가능합니다.\n로케이션을 확인하세요.", R.drawable.popup_title_alert, new Handler() {
@@ -362,6 +391,7 @@ public class LocationFragment extends CommonFragment {
      * @param lot 스캔한 로트번호
      */
     private void requestLotItems(String location, String lot) {
+
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         Call<LotItemsModel> call = service.postLotItems("sp_pda_location_move_itm_scan", location, lot);

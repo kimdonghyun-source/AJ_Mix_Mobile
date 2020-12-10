@@ -1,11 +1,13 @@
 package kr.co.ajcc.wms.menu.product_out;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,10 +90,18 @@ public class ProductPickingAdapter extends RecyclerView.Adapter<ProductPickingAd
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 0 && !s.toString().equals(String.valueOf(result))) {     // StackOverflow를 막기위해,
                     result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
+
+                    int cnt = Utils.stringToInt(result);
+
+                    //아이템 수량 초과시
+                    if(cnt > Utils.stringToInt(item.getItm_pallet_qty())){
+                        cnt = Utils.stringToInt(item.getItm_pallet_qty());
+                        result = item.getItm_pallet_qty();
+                    }
+
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    float cnt = Utils.stringToFloat(result);
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setReq_qty(cnt);
                 }
@@ -101,6 +111,7 @@ public class ProductPickingAdapter extends RecyclerView.Adapter<ProductPickingAd
                 mHandler.sendEmptyMessage(1);
             }
         });
+
     }
 
     @Override

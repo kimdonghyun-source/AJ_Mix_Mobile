@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,6 +119,18 @@ public class ProductPickingFragment extends CommonFragment {
                 if(msg.what == 1){
                     BarcodeReadEvent event = (BarcodeReadEvent)msg.obj;
                     String barcode = event.getBarcodeData();
+                    List<PalletSnanModel.Items> itms = mAdapter.getData();
+
+                    //시리얼스캔 중복
+                    if(itms != null) {
+                        for (PalletSnanModel.Items itm : itms) {
+                            if (barcode.equals(itm.getSerial_no())) {
+                                Utils.Toast(mContext, getString(R.string.error_productOut_check));
+                                return;
+                            }
+                        }
+                    }
+
                     requestLotSn(barcode);
                 }
             }
@@ -167,7 +180,7 @@ public class ProductPickingFragment extends CommonFragment {
     /**
      * 시리얼번호스캔(팔레트 바코드)
      */
-    private void requestLotSn(String param) {
+    private void requestLotSn(final String param) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         Call<PalletSnanModel> call = service.postScanPallet("sp_pda_ship_serial_scan", param);
@@ -186,6 +199,10 @@ public class ProductPickingFragment extends CommonFragment {
                                     mAdapter.addData(item);
                                 }
                                 mAdapter.notifyDataSetChanged();
+
+                                //출고번호 선택 후 스캔시 품목내용이 올라오지 않음
+                                tv_empty.setVisibility(View.GONE);
+                                recycleview.setVisibility(View.VISIBLE);
                             }
                         }else{
                             Utils.Toast(mContext, model.getMSG());

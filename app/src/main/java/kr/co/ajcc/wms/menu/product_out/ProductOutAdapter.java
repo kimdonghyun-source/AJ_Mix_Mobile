@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,11 +126,15 @@ public class ProductOutAdapter extends RecyclerView.Adapter<ProductOutAdapter.Vi
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
-                    Message msg = new Message();
-                    msg.obj = itemsList.get(getAdapterPosition());
-                    msg.what= getAdapterPosition();
-                    mHandler.sendMessage(msg);
+                    try {
+                        //Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
+                        Message msg = new Message();
+                        msg.obj = itemsList.get(getAdapterPosition());
+                        msg.what = getAdapterPosition();
+                        mHandler.sendMessage(msg);
+                    } catch (Exception e){
+                        Utils.Log(e.getMessage());
+                    }
                 }
             });
 

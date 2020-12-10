@@ -8,4 +8,11 @@
     <string name="error_location_items">이동할 품목을 등록해주세요.</string>
     <string name="error_location">로케이션을 선택해주세요.</string>
     <string name="error_in_items">입고할 품목을 등록해주세요.</string>
+
+    <!-- gyoeng -->
+    <string name="error_pallet_check">동일한 팔레트를 선택하셨습니다.</string>
+    <string name="error_location_cnt">이동수량이 초과되었습니다.</string>
+    <string name="error_location_check">동일한 로케이션을 선택하셨습니다.</string>
+    <string name="error_productOut_cnt">지시수량을 초과하였습니다.</string>
+    <string name="error_productOut_check">동일한 시리얼번호를 선택하셨습니다.</string>
 </resources>

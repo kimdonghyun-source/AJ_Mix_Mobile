@@ -235,6 +235,10 @@ public class ProductOutFragment extends CommonFragment {
      * 출고지시서 상세
      */
     private void requestDeliveryOrderDetail(final String param) {
+        if(mAdapter!=null) {
+            mAdapter.clearData();
+            mAdapter.notifyDataSetChanged();
+        }
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
         Call<DeliveryOrderModel> call = service.postShipReqDetail("sp_pda_ship_req_detail", param);
@@ -298,10 +302,10 @@ public class ProductOutFragment extends CommonFragment {
         int count = 0;
         if(items!=null && items.size()>0) {
             for (DeliveryOrderModel.DeliveryOrder item : items) {
-                JsonObject obj = new JsonObject();
                 List<PalletSnanModel.Items> snList = item.getItems();
                 if (snList != null && snList.size() > 0) {
                     for (PalletSnanModel.Items sn : snList) {
+                        JsonObject obj = new JsonObject();
                         //스캔바코드
                         obj.addProperty("scan_psn", sn.getSerial_no());
                         //출고수량

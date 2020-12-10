@@ -94,7 +94,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:imeOptions="actionDone"
-                        android:text="애터"
+                        android:text=""
                         />
                     <!--Spinner
                         android:id="@+id/spinner"

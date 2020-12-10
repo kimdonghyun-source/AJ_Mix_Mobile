@@ -17,23 +17,37 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../keystore/aj-mwms.jks')
+            storePassword "aj2020"
+            keyAlias "aj-mwms"
+            keyPassword "aj2020"
+        }
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""
-            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC/Mobile/\""
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""       //테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153:14283/AJCC/Mobile/\""    //out
+            //buildConfigField "String", "API_SERVER", "\"http://172.0.0.215/AJCC_IN/Mobile/\""          //in
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC_IN/Mobile/\""          //t
         }
-
+        
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""
-            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC/Mobile/\""
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""       //테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153:14283/AJCC/Mobile/\""    //out 외부용
+            //buildConfigField "String", "API_SERVER", "\"http://172.0.0.215/AJCC_IN/Mobile/\""          //in 내부용
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC_IN/Mobile/\""          //t
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -74,4 +88,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation project(path: ':DataCollection')
     implementation project(path: ':jelib')
+
+    //activity에서 fragment에 이벤트를 알려주기 위한 라이브러리
+    implementation 'com.squareup:otto:1.3.8'
 }

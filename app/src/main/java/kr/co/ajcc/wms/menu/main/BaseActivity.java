@@ -26,9 +26,11 @@ import kr.co.ajcc.wms.GlobalApplication;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.Utils;
+import kr.co.ajcc.wms.custom.BusProvider;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.menu.config.ConfigFragment;
+import kr.co.ajcc.wms.menu.inventory.InventoryFragment;
 import kr.co.ajcc.wms.menu.location.LocationFragment;
 import kr.co.ajcc.wms.menu.material_out.MaterialOutFragment;
 import kr.co.ajcc.wms.menu.material_out.MaterialPickingFragment;
@@ -58,6 +60,7 @@ public class BaseActivity extends CommonCompatActivity {
     //GNB 배경 이미지(피킹은 햄버거버튼 사용 안하기 때문)
     ImageView iv_gnb;
     ImageButton bt_drawer;
+    ImageButton bt_print;
     //선택된 메뉴 postion
     int mSelectMenu;
 
@@ -74,6 +77,8 @@ public class BaseActivity extends CommonCompatActivity {
         drawer_layout = findViewById(R.id.drawer_layout);
         bt_drawer = findViewById(R.id.bt_drawer);
         bt_drawer.setOnClickListener(onClickListener);
+        bt_print = findViewById(R.id.bt_print);
+        bt_print.setOnClickListener(onClickListener);
         findViewById(R.id.bt_close).setOnClickListener(onClickListener);
 
         ArrayList<String> list = new ArrayList<>();
@@ -82,7 +87,9 @@ public class BaseActivity extends CommonCompatActivity {
         list.add("생산 입고");
         list.add("제품출고");
         list.add("Pallet 관리");
+        list.add("재고실사");
         list.add("프린터 설정");
+
 
         ListView listView = findViewById(R.id.list);
         mAdapter = new ListAdapter();
@@ -156,6 +163,12 @@ public class BaseActivity extends CommonCompatActivity {
                 replaceContent(fragment, Define.TAG_MATERIAL_PICKING, R.id.fl_content);
                 break;
             }
+            case Define.MENU_INVENTORY: {
+                CommonFragment fragment = new InventoryFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
+                break;
+            }
             case Define.MENU_PALLET_PRINTER: {
                 CommonFragment fragment = new PrinterFragment();
                 fragment.setArguments(args);
@@ -175,6 +188,9 @@ public class BaseActivity extends CommonCompatActivity {
         int gnb = R.drawable.titilbar;
         int isDrawer = View.VISIBLE;
         int isLock = DrawerLayout.LOCK_MODE_UNLOCKED;
+
+        //프린터 화면에서만 노출하면 되기 때문에 gone 처리 후 프린터 화면 진입 시 visible
+        bt_print.setVisibility(View.GONE);
 
         switch (menu){
             case Define.MENU_REGISTRATION: {
@@ -205,6 +221,10 @@ public class BaseActivity extends CommonCompatActivity {
                 image = R.drawable.menu_setting_title;
                 break;
             }
+            case Define.MENU_INVENTORY: {
+                image = R.drawable.menu_inventory_title;
+                break;
+            }
             case Define.MENU_PRODUCT_PICKING: {
                 image = R.drawable.prod_picking_title;
                 gnb = R.drawable.titlebar_submenu;
@@ -221,6 +241,14 @@ public class BaseActivity extends CommonCompatActivity {
             }
             case Define.MENU_PALLET_PRINTER: {
                 image = R.drawable.print_title;
+                gnb = R.drawable.titlebar_submenu;
+                isDrawer = View.GONE;
+                isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+                bt_print.setVisibility(View.VISIBLE);
+                break;
+            }
+            case Define.MENU_INVENTORY_PICKING: {
+                image = R.drawable.menu_inhouse_title;
                 gnb = R.drawable.titlebar_submenu;
                 isDrawer = View.GONE;
                 isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
@@ -246,6 +274,9 @@ public class BaseActivity extends CommonCompatActivity {
                     break;
                 case R.id.bt_close:
                     drawer.closeDrawers();
+                    break;
+                case R.id.bt_print:
+                    BusProvider.getInstance().post(0);
                     break;
             }
         }
@@ -378,6 +409,12 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_CONFIG: {
                                         CommonFragment fragment = new ConfigFragment();
                                         replaceContent(fragment, Define.TAG_CONFIG, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    case Define.MENU_INVENTORY: {
+                                        CommonFragment fragment = new InventoryFragment();
+                                        replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                                         break;
                                     }
                                 }

@@ -1,13 +1,18 @@
 package kr.co.ajcc.wms.menu.location;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,13 +34,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         itemsList = new ArrayList<>();
     }
 
-    public void setData(LotItemsModel.Items item){
-        itemsList.add(item);
-    }
+    public void setData(LotItemsModel.Items item){ itemsList.add(item); }
 
-    public void clearData(){
-        itemsList.clear();
-    }
+    public void clearData(){ itemsList.clear(); }
 
     public List<LotItemsModel.Items> getData(){
         return itemsList;
@@ -71,7 +72,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -80,10 +80,19 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
             public void afterTextChanged(Editable s) {
                 if(s.toString().length() > 0 && !s.toString().equals(result)) {     // StackOverflow를 막기위해,
                     result = s.toString();   // 에딧텍스트의 값을 변환하여, result에 저장.
+
+                    float cnt = Utils.stringToInt(s.toString());
+
+                    //수량 체크
+                    if(cnt > Utils.stringToInt(holder.tv_count.getText().toString())){
+                        Utils.Toast(mActivity, mActivity.getString(R.string.error_location_cnt));
+                        holder.et_count.setText("");
+                        return;
+                    }
+
                     holder.et_count.setText(result);    // 결과 텍스트 셋팅.
                     holder.et_count.setSelection(result.length());     // 커서를 제일 끝으로 보냄.
 
-                    float cnt = Utils.stringToInt(s.toString());
                     //입력된 수량을 list에 넣어줌
                     itemsList.get(holder.getAdapterPosition()).setInput_qty(cnt);
                 }

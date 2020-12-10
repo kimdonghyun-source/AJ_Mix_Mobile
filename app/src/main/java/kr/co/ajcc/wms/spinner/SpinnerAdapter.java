@@ -1,13 +1,10 @@
 package kr.co.ajcc.wms.spinner;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,12 +17,14 @@ public class SpinnerAdapter extends BaseAdapter {
     List<String> mData;
     Spinner mSpinner;
     LayoutInflater inflater;
+    int idx = 0;
 
-    public SpinnerAdapter(Context context, List<String> data, Spinner spinner){
+    public SpinnerAdapter(Context context, List<String> data, Spinner spinner, int flag){
         mContext = context;
         mData = data;
         mSpinner = spinner;
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        idx = flag;
     }
 
     @Override
@@ -37,6 +36,12 @@ public class SpinnerAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup parent) {
         if(view == null) {
             view = inflater.inflate(R.layout.view_spinner, parent, false);
+        }
+
+        if(idx == 0){
+            view.findViewById(R.id.fr_spinner).setBackgroundResource(R.drawable.menu_release_inputinwh);
+        }else{
+            view.findViewById(R.id.fr_spinner).setBackgroundResource(R.drawable.menu_release_inputoutwh);
         }
 
         if(mData != null){

@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -26,7 +26,8 @@
                     android:id="@+id/bt_drawer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|left"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true"
                     android:background="@android:color/transparent"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"
@@ -38,19 +39,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/menu_inproduct_title" />
 
                 <ImageButton
                     android:id="@+id/bt_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|right"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentRight="true"
                     android:background="@android:color/transparent"
                     android:paddingTop="5dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="5dp"
                     android:src="@drawable/bt_back" />
-            </FrameLayout>
+                <ImageButton
+                    android:id="@+id/bt_print"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@+id/bt_back"
+                    android:visibility="gone"
+                    android:background="@android:color/transparent"
+                    android:paddingTop="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/bt_printer" />
+            </RelativeLayout>
             <FrameLayout
                 android:id="@+id/fl_content"
                 android:layout_width="match_parent"

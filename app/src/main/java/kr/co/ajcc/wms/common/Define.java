@@ -21,7 +21,11 @@ public class Define {
     //파렛트프린터출력
     public static final int MENU_PALLET_PRINTER = 61;
     //프린터설정
-    public static final int MENU_CONFIG = 7;
+    public static final int MENU_CONFIG = 8;
+    //재고실사
+    public static final int MENU_INVENTORY = 7;
+
+    public static final int MENU_INVENTORY_PICKING = 71;
 
     //입고등록
     public static final String TAG_REGISTRATION = "registration";
@@ -43,4 +47,6 @@ public class Define {
     public static final String TAG_PALLET_PRINTER = "pallet_printer";
     //프린터설정
     public static final String TAG_CONFIG = "config";
+    //재고실사
+    public static final String TAG_INVENTORY = "invertory";
 }

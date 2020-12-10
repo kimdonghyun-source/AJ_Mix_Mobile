@@ -7,7 +7,8 @@
     android:background="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +28,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/menu_inhouse_search"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
             <EditText
                 android:id="@+id/et_order"
                 style="@style/EditTextLocation"
@@ -44,7 +46,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -65,7 +68,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -84,6 +88,57 @@
                 android:textSize="20dp" />
         </LinearLayout>
     </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_release_outwh"/>
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fadingEdge = "none"
+            android:layout_gravity="right|center"
+            android:background="@color/white"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_release_inwh"/>
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fadingEdge = "none"
+            android:layout_gravity="right|center"
+            android:background="@color/white"/>
+    </LinearLayout>
+
+
+
+
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,15 +152,16 @@
         android:layout_margin="20dp"
         android:gravity="top|left"
         android:textSize="18dp"
-        android:visibility="gone"
         android:textColor="@color/color_a3a3a3"
-        android:text="이동 적치할 품목의 바코드를 스캔하세요."/>
+        android:text="불출할 품목의 바코드를 스캔하세요."/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:nestedScrollingEnabled="false"/>
+        android:nestedScrollingEnabled="false" />
+
     <LinearLayout
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
