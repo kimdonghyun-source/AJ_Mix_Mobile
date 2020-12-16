@@ -33,10 +33,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""       //테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""  //테스트용
             //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153:14283/AJCC/Mobile/\""    //out
             //buildConfigField "String", "API_SERVER", "\"http://172.0.0.215/AJCC_IN/Mobile/\""          //in
-            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC_IN/Mobile/\""          //t
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC_IN/Mobile/\""       //t
+            buildConfigField "String", "API_SERVER", "\"http://222.239.233.83:14283/AJCC/Mobile/\""       //new 주소
+
         }
         
         release {
@@ -44,10 +46,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""       //테스트용
-            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153:14283/AJCC/Mobile/\""    //out 외부용
-            //buildConfigField "String", "API_SERVER", "\"http://172.0.0.215/AJCC_IN/Mobile/\""          //in 내부용
+            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.20:14283/AJCC_TEST/Mobile/\""   //테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153:14283/AJCC/Mobile/\""       //out 외부용
+            //buildConfigField "String", "API_SERVER", "\"http://172.0.0.215/AJCC_IN/Mobile/\""             //in 내부용
             //buildConfigField "String", "API_SERVER", "\"http://220.81.243.153/AJCC_IN/Mobile/\""          //t
+            buildConfigField "String", "API_SERVER", "\"http://222.239.233.83:14283/AJCC/Mobile/\""       //new 주소
             signingConfig signingConfigs.release
         }
     }
