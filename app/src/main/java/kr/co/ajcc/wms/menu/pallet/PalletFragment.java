@@ -23,7 +23,6 @@ import com.honeywell.aidc.BarcodeReadEvent;
 
 import java.util.Date;
 
-import kr.co.ajcc.wms.BuildConfig;
 import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.Define;
 import kr.co.ajcc.wms.common.SharedData;
@@ -402,6 +401,20 @@ public class PalletFragment extends CommonFragment {
                                     if(mergeItem2 != null){
                                         if(mergeItem2.getSerial_no().equals(model.getItems().get(0).getSerial_no())){
                                             Utils.Toast(mContext, getString(R.string.error_productOut_check));
+                                            return;
+                                        }
+                                    }
+
+                                    if (mergeItem1 != null){
+                                        if (!mergeItem1.getItm_code().equals(model.getItems().get(0).getItm_code())){
+                                            Utils.Toast(mContext, getString(R.string.error_productOut_itm_code));
+                                            return;
+                                        }
+                                    }
+
+                                    if (mergeItem2 != null){
+                                        if (!mergeItem2.getItm_code().equals(model.getItems().get(0).getItm_code())){
+                                            Utils.Toast(mContext, getString(R.string.error_productOut_itm_code));
                                             return;
                                         }
                                     }

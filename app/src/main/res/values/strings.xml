@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AJmWMS</string>
+    <string name="app_name">AJmWMS_O</string>
 
     <!-- 팝업 또는 토스트 메세지 -->
     <string name="error_network">네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
@@ -15,4 +15,5 @@
     <string name="error_location_check">동일한 로케이션을 선택하셨습니다.</string>
     <string name="error_productOut_cnt">지시수량을 초과하였습니다.</string>
     <string name="error_productOut_check">동일한 시리얼번호를 선택하셨습니다.</string>
+    <string name="error_productOut_itm_code">동일한 아이템코드를 선택하셨습니다.</string>
 </resources>
