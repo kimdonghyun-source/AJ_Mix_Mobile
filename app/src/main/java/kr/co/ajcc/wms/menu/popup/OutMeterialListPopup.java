@@ -30,6 +30,8 @@ import kr.co.ajcc.wms.R;
 import kr.co.ajcc.wms.common.UtilDate;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
+import kr.co.ajcc.wms.model.MixDetailList;
+import kr.co.ajcc.wms.model.MixMrcpListModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.WarehouseModel;
 import kr.co.ajcc.wms.network.ApiClientService;
@@ -41,15 +43,18 @@ import retrofit2.Response;
 public class OutMeterialListPopup {
     Activity mActivity;
     Dialog dialog;
-    List<WarehouseModel.Items> mWarehouseList;
+    List<MixMrcpListModel.Items> mMixList;
+    List<MixDetailList.Items> mMixDetailList;
     Handler mHandler;
     Spinner mSpinner;
     int mSpinnerSelect = 0;
     TextView tv_date;
+    ListView mListView;
+    ListAdapter mAdapter;
 
-    public OutMeterialListPopup(Activity activity, List<WarehouseModel.Items> list, int title, Handler handler) {
+    public OutMeterialListPopup(Activity activity, List<MixDetailList.Items> list, int title, Handler handler) {
         mActivity = activity;
-        mWarehouseList = list;
+        mMixDetailList = list;
         mHandler = handler;
         showPopUpDialog(activity, title);
     }
@@ -101,18 +106,22 @@ public class OutMeterialListPopup {
         });
 
         List<String> list = new ArrayList<>();
-        for (WarehouseModel.Items item : mWarehouseList)
-            list.add(item.getWh_name());
+      /*  for (MixMrcpListModel.Items item : mMixList)
+            list.add(item.getEqu_name());*/
         
         mSpinner = dialog.findViewById(R.id.spinner);
         SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, list, mSpinner);
         mSpinner.setAdapter(spinnerAdapter);
         mSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
+        mListView = dialog.findViewById(R.id.list);
+        mAdapter = new ListAdapter();
+        mListView.setAdapter(mAdapter);
+
         dialog.findViewById(R.id.bt_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mWarehouseList != null)
+                if( tv_date.getText().toString() != null)
                     requestOutOrderList();
             }
         });
@@ -139,6 +148,12 @@ public class OutMeterialListPopup {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             mSpinnerSelect = position;
+
+            MixMrcpListModel.Items item = mMixList.get(position);
+            //String item = (String) mSpinner.getSelectedItem();
+
+            mActivity = null;
+            mAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -146,11 +161,13 @@ public class OutMeterialListPopup {
         }
     };
 
+
+
     class ListAdapter extends BaseAdapter {
         LayoutInflater mInflater;
-        List<MaterialOutListModel.Items> mList;
+        List<MixMrcpListModel.Items> mList;
 
-        public void setData(List<MaterialOutListModel.Items> list){
+        public void setData(List<MixMrcpListModel.Items> list){
             mList = list;
         }
 
@@ -168,7 +185,7 @@ public class OutMeterialListPopup {
 
 
         @Override
-        public MaterialOutListModel.Items getItem(int position){
+        public MixMrcpListModel.Items getItem(int position){
             return mList.get(position);
         }
 
@@ -183,18 +200,21 @@ public class OutMeterialListPopup {
             final ListAdapter.ViewHolder holder;
             if (v == null) {
                 holder = new ListAdapter.ViewHolder();
-                v = mInflater.inflate(R.layout.cell_pop_material_out, null);
+                v = mInflater.inflate(R.layout.cell_pop_mix, null);
                 v.setTag(holder);
 
+                holder.tv_date = v.findViewById(R.id.tv_date);
                 holder.tv_code = v.findViewById(R.id.tv_code);
-                holder.tv_name = v.findViewById(R.id.tv_name);
+                holder.tv_qty = v.findViewById(R.id.tv_qty);
+
             } else {
                 holder = (ListAdapter.ViewHolder) v.getTag();
             }
 
-            final MaterialOutListModel.Items data = mList.get(position);
-            holder.tv_code.setText(data.getOut_slip_no());
-            holder.tv_name.setText(data.getWh_name_in());
+            final MixMrcpListModel.Items data = mList.get(position);
+            holder.tv_date.setText(data.getMrcp_date());
+            holder.tv_code.setText(data.getEqu_name());
+            holder.tv_qty.setText(String.valueOf(data.getMrcp_qty()));
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -210,24 +230,25 @@ public class OutMeterialListPopup {
         }
 
         class ViewHolder {
+            TextView tv_date;
             TextView tv_code;
-            TextView tv_name;
+            TextView tv_qty;
         }
     }
 
     /**
-     * 창고 검색
+     * 출고지시서 검색
      */
     private void requestOutOrderList() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<MaterialOutListModel> call = service.postOutOrderList("sp_pda_out_list", tv_date.getText().toString().replace("-", ""), mWarehouseList.get(mSpinnerSelect).getWh_code());
+        Call<MixMrcpListModel> call = service.mrcp_list("sp_pda_mix_mrcp_list", tv_date.getText().toString().replace("-", ""), "");
 
-        call.enqueue(new Callback<MaterialOutListModel>() {
+        call.enqueue(new Callback<MixMrcpListModel>() {
             @Override
-            public void onResponse(Call<MaterialOutListModel> call, Response<MaterialOutListModel> response) {
+            public void onResponse(Call<MixMrcpListModel> call, Response<MixMrcpListModel> response) {
                 if(response.isSuccessful()){
-                    MaterialOutListModel model = response.body();
+                    MixMrcpListModel model = response.body();
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
                         if(model.getFlag() == ResultModel.SUCCESS) {
@@ -247,10 +268,11 @@ public class OutMeterialListPopup {
             }
 
             @Override
-            public void onFailure(Call<MaterialOutListModel> call, Throwable t) {
+            public void onFailure(Call<MixMrcpListModel> call, Throwable t) {
                 Utils.LogLine(t.getMessage());
                 Utils.Toast(mActivity, mActivity.getString(R.string.error_network));
             }
         });
-    }
+    }   //Close 출고검색
+
 }

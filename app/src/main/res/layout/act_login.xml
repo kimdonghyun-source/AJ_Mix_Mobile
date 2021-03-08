@@ -48,6 +48,7 @@
                             android:text="User ID :  "
                             android:textColor="@color/black"/>
                         <EditText
+                            android:text="pda"
                             android:id="@+id/et_user_id"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -74,6 +75,7 @@
                             android:text="Password :  "
                             android:textColor="@color/black"/>
                         <EditText
+                            android:text="1234"
                             android:id="@+id/et_pass"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"

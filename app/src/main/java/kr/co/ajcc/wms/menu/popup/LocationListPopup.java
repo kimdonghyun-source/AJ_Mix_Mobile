@@ -1,6 +1,7 @@
 package kr.co.ajcc.wms.menu.popup;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,11 +25,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import kr.co.ajcc.wms.R;
+import kr.co.ajcc.wms.common.UtilDate;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.model.LocationModel;
+import kr.co.ajcc.wms.model.MixMrcpListModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.WarehouseModel;
 import kr.co.ajcc.wms.network.ApiClientService;
@@ -40,7 +45,7 @@ public class LocationListPopup {
     Activity mActivity;
 
     Dialog dialog;
-    List<WarehouseModel.Items> mWarehouseList;
+    List<MixMrcpListModel.Items> mMixList;
     Handler mHandler;
 
     Spinner mSpinner;
@@ -50,9 +55,11 @@ public class LocationListPopup {
     ListAdapter mAdapter;
     List<LocationModel.Items> mLocationList;
 
-    public LocationListPopup(Activity activity, List<WarehouseModel.Items> list, int title, Handler handler){
+    TextView tv_date;
+
+    public LocationListPopup(Activity activity, List<MixMrcpListModel.Items> list, int title, Handler handler){
         mActivity = activity;
-        mWarehouseList = list;
+        mMixList = list;
         mHandler = handler;
         showPopUpDialog(activity, title);
     }
@@ -77,7 +84,7 @@ public class LocationListPopup {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
 
-        dialog.setContentView(R.layout.popup_location_list);
+        dialog.setContentView(R.layout.popup_mcrp_list);
 
         Window window = dialog.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
@@ -91,9 +98,20 @@ public class LocationListPopup {
         ImageView iv_title = dialog.findViewById(R.id.iv_title);
         iv_title.setBackgroundResource(title);
 
+        tv_date = dialog.findViewById(R.id.tv_date);
+        final String date = UtilDate.getDateToString(new Date(System.currentTimeMillis()), "yyyy-MM-dd");
+        tv_date.setText(date);
+        tv_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog dialog = new DatePickerDialog(mActivity, dateListener, Utils.stringToInt(date.replace("-", "").substring(0, 4)), Utils.stringToInt(date.replace("-", "").substring(4, 6))-1, Utils.stringToInt(date.replace("-", "").substring(6, 8)));
+                dialog.show();
+            }
+        });
+
         List<String> list = new ArrayList<>();
-        for (WarehouseModel.Items item : mWarehouseList)
-            list.add(item.getWh_name());
+        for (MixMrcpListModel.Items item : mMixList)
+            //list.add(item.getEqu_code());
 
         mSpinner =  dialog.findViewById(R.id.spinner);
         SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, list, mSpinner);
@@ -122,19 +140,27 @@ public class LocationListPopup {
         dialog.show();
     }
 
+    DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String date = String.format("%04d", year)+"-"+String.format("%02d", monthOfYear+1)+"-"+String.format("%02d", dayOfMonth);
+            tv_date.setText(date);
+        }
+    };
+
     AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener(){
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             mSpinnerSelect = position;
 
-            WarehouseModel.Items item = mWarehouseList.get(position);
+            MixMrcpListModel.Items item = mMixList.get(position);
             //String item = (String) mSpinner.getSelectedItem();
 
             mLocationList = null;
             mAdapter.notifyDataSetChanged();
 
-            requestLocation(item.getWh_code());
+            requestLocation(item.getMrcp_slip_code());
         }
 
         @Override
@@ -176,18 +202,20 @@ public class LocationListPopup {
             ListAdapter.ViewHolder holder;
             if (v == null) {
                 holder = new ListAdapter.ViewHolder();
-                v = mInflater.inflate(R.layout.cell_pop_location, null);
+                v = mInflater.inflate(R.layout.cell_pop_mix, null);
                 v.setTag(holder);
 
+                holder.tv_date = v.findViewById(R.id.tv_date);
                 holder.tv_code = v.findViewById(R.id.tv_code);
-                holder.tv_name = v.findViewById(R.id.tv_name);
+                holder.tv_qty = v.findViewById(R.id.tv_qty);
             } else {
                 holder = (ListAdapter.ViewHolder) v.getTag();
             }
 
-            final LocationModel.Items item = mLocationList.get(position);
-            holder.tv_code.setText(item.getLocation_code());
-            holder.tv_name.setText(item.getLocation_name());
+            final MixMrcpListModel.Items item = mMixList.get(position);
+            holder.tv_date.setText(item.getMrcp_date());
+            holder.tv_code.setText(item.getEqu_name());
+            holder.tv_qty.setText(item.getMrcp_qty());
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -203,8 +231,9 @@ public class LocationListPopup {
         }
 
         class ViewHolder {
+            TextView tv_date;
             TextView tv_code;
-            TextView tv_name;
+            TextView tv_qty;
         }
     }
 

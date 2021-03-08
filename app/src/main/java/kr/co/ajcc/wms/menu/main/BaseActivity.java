@@ -30,17 +30,19 @@ import kr.co.ajcc.wms.custom.BusProvider;
 import kr.co.ajcc.wms.custom.CommonCompatActivity;
 import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.menu.config.ConfigFragment;
-import kr.co.ajcc.wms.menu.inventory.InventoryFragment;
-import kr.co.ajcc.wms.menu.location.LocationFragment;
-import kr.co.ajcc.wms.menu.material_out.MaterialOutFragment;
-import kr.co.ajcc.wms.menu.material_out.MaterialPickingFragment;
-import kr.co.ajcc.wms.menu.pallet.PalletFragment;
-import kr.co.ajcc.wms.menu.pallet.PrinterFragment;
+
+
+
+
+import kr.co.ajcc.wms.menu.mix.MixFragment;
+
+
+import kr.co.ajcc.wms.menu.mix.MixManageFragment;
 import kr.co.ajcc.wms.menu.popup.TwoBtnPopup;
-import kr.co.ajcc.wms.menu.product_out.ProductOutFragment;
-import kr.co.ajcc.wms.menu.product_out.ProductPickingFragment;
-import kr.co.ajcc.wms.menu.production_in.ProductionInFragment;
-import kr.co.ajcc.wms.menu.registration.RegistrationFragment;
+
+
+
+
 import kr.co.ajcc.wms.model.UserInfoModel;
 
 public class BaseActivity extends CommonCompatActivity {
@@ -82,13 +84,8 @@ public class BaseActivity extends CommonCompatActivity {
         findViewById(R.id.bt_close).setOnClickListener(onClickListener);
 
         ArrayList<String> list = new ArrayList<>();
-        list.add("로케이션 이동");
-        list.add("자재 불출");
-        list.add("생산 입고");
-        list.add("제품출고");
-        list.add("Pallet 관리");
-        list.add("재고실사");
-        list.add("프린터 설정");
+        list.add("배합관리");
+
 
 
         ListView listView = findViewById(R.id.list);
@@ -101,7 +98,7 @@ public class BaseActivity extends CommonCompatActivity {
         UserInfoModel.Items model = application.getUserInfoModel();
 
         TextView tv_name = findViewById(R.id.tv_name);
-        tv_name.setText(model.getDpt_name()+" "+model.getEmp_name());
+        //tv_name.setText(model.getDpt_name()+" "+model.getEmp_name());
 
         iv_title = findViewById(R.id.iv_title);
         iv_gnb = findViewById(R.id.iv_gnb);
@@ -113,15 +110,21 @@ public class BaseActivity extends CommonCompatActivity {
         mSelectMenu = menu-2;
 
         switch (menu){
-            case Define.MENU_REGISTRATION: {
-                CommonFragment fragment = new RegistrationFragment();
-//                Bundle args = new Bundle();
-//                args.putSerializable(Define.ARG_INFO, mainTabList);
-//                fragment.setArguments(args);
-                replaceContent(fragment, Define.TAG_REGISTRATION, R.id.fl_content);
+
+                //배합관리
+            case Define.MENU_MIX: {
+                CommonFragment fragment = new MixFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_MIX, R.id.fl_content);
                 break;
             }
-            case Define.MENU_LOCATION: {
+
+            case Define.MENU_MIX_MANAGE: {
+                CommonFragment fragment = new MixManageFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_MIX_MANAGE, R.id.fl_content);
+            }
+            /*case Define.MENU_LOCATION: {
                 CommonFragment fragment = new LocationFragment();
                 replaceContent(fragment, Define.TAG_LOCATION, R.id.fl_content);
                 break;
@@ -174,7 +177,7 @@ public class BaseActivity extends CommonCompatActivity {
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_PALLET_PRINTER, R.id.fl_content);
                 break;
-            }
+            }*/
 
         }
 
@@ -193,11 +196,15 @@ public class BaseActivity extends CommonCompatActivity {
         bt_print.setVisibility(View.GONE);
 
         switch (menu){
-            case Define.MENU_REGISTRATION: {
-                image = R.drawable.menu_inhouse_title;
+            case Define.MENU_MIX: {
+                image = R.drawable.menu_mix_title;
                 break;
             }
-            case Define.MENU_LOCATION: {
+
+            case Define.MENU_MIX_MANAGE: {
+                image = R.drawable.menu_mix_title2;
+            }
+            /*case Define.MENU_LOCATION: {
                 image = R.drawable.menu_moveloc_title;
                 break;
             }
@@ -253,7 +260,7 @@ public class BaseActivity extends CommonCompatActivity {
                 isDrawer = View.GONE;
                 isLock = DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
                 break;
-            }
+            }*/
         }
         iv_title.setBackgroundResource(image);
         iv_gnb.setBackgroundResource(gnb);
@@ -381,12 +388,12 @@ public class BaseActivity extends CommonCompatActivity {
                                 mSelectMenu = position;
                                 //0이 없고 입고등록이 삭제되어 +2 해줘야함
                                 switch (position+2){
-                                    case Define.MENU_LOCATION: {
-                                        CommonFragment fragment = new LocationFragment();
-                                        replaceContent(fragment, Define.TAG_LOCATION, R.id.fl_content);
+                                    case Define.MENU_MIX: {
+                                        CommonFragment fragment = new MixFragment();
+                                        replaceContent(fragment, Define.TAG_MIX, R.id.fl_content);
                                         break;
                                     }
-                                    case Define.MENU_MATERIAL_OUT: {
+                                    /*case Define.MENU_MATERIAL_OUT: {
                                         CommonFragment fragment = new MaterialOutFragment();
                                         replaceContent(fragment, Define.TAG_MATERIAL_OUT, R.id.fl_content);
                                         break;
@@ -416,7 +423,7 @@ public class BaseActivity extends CommonCompatActivity {
                                         CommonFragment fragment = new InventoryFragment();
                                         replaceContent(fragment, Define.TAG_INVENTORY, R.id.fl_content);
                                         break;
-                                    }
+                                    }*/
                                 }
                                 setTitleImage(position+2);
                                 mAdapter.notifyDataSetChanged();

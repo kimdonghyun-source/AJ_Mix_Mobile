@@ -30,71 +30,15 @@
         android:layout_height="match_parent"
         android:padding="5dp"
         android:orientation="vertical">
-        <ImageButton
-            android:id="@+id/bt_menu_1"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:visibility="gone"
-            android:src="@drawable/main_menu1"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_2"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:src="@drawable/main_menu2"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_3"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/main_menu3"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_4"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="right"
-            android:src="@drawable/main_menu4"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_5"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:src="@drawable/main_menu5"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_6"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/main_menu6"
-            android:background="@android:color/transparent"/>
-        <ImageButton
-            android:id="@+id/bt_menu_8"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="right"
-            android:src="@drawable/main_menu8"
-            android:background="@android:color/transparent"/>
 
         <ImageButton
-            android:id="@+id/bt_menu_7"
+            android:layout_marginTop="230dp"
+            android:id="@+id/bt_menu_2"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:src="@drawable/main_menu7"
-            android:background="@android:color/transparent"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu2" />
+
     </LinearLayout>
 </LinearLayout>

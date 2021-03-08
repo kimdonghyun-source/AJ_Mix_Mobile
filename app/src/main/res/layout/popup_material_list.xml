@@ -57,10 +57,12 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/popup_text_date" />
+                        android:text="제조일 :"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
 
                     <TextView
                         android:id="@+id/tv_date"
@@ -84,10 +86,12 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/popup_text_wh" />
+                        android:text="설    비 :"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"/>
 
                     <Spinner
                         android:id="@+id/spinner"

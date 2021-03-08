@@ -1,9 +1,13 @@
 package kr.co.ajcc.wms.common;
 
 public class Define {
-    //입고등록
-    public static final int MENU_REGISTRATION = 1;
-    //로케이션 이동
+
+    //배합관리
+    public static final int MENU_MIX = 1;
+    //배합투입관리
+    public static final int MENU_MIX_MANAGE = 11;
+
+    /*//로케이션 이동
     public static final int MENU_LOCATION = 2;
     //자재불출
     public static final int MENU_MATERIAL_OUT  = 3;
@@ -25,11 +29,14 @@ public class Define {
     //재고실사
     public static final int MENU_INVENTORY = 7;
 
-    public static final int MENU_INVENTORY_PICKING = 71;
+    public static final int MENU_INVENTORY_PICKING = 71;*/
 
-    //입고등록
-    public static final String TAG_REGISTRATION = "registration";
-    //로케이션 이동
+    //배합관리
+    public static final String TAG_MIX = "mix";
+    //배합투입관리
+    public static final String TAG_MIX_MANAGE = "mix_manage";
+
+    /*//로케이션 이동
     public static final String TAG_LOCATION = "location";
     //자재불출
     public static final String TAG_MATERIAL_OUT  = "material";
@@ -48,5 +55,5 @@ public class Define {
     //프린터설정
     public static final String TAG_CONFIG = "config";
     //재고실사
-    public static final String TAG_INVENTORY = "invertory";
+    public static final String TAG_INVENTORY = "invertory";*/
 }

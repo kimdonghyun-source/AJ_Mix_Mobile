@@ -11,6 +11,9 @@ import kr.co.ajcc.wms.model.LotItemsModel;
 import kr.co.ajcc.wms.model.MaterialLocAndLotModel;
 import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
+import kr.co.ajcc.wms.model.MixDetailList;
+import kr.co.ajcc.wms.model.MixBarcodeScan;
+import kr.co.ajcc.wms.model.MixMrcpListModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.SerialNumberModel;
@@ -43,6 +46,65 @@ public interface ApiClientService {
             @Query("param2") String pass,
             @Query("param3") String version
     );
+
+
+    //-------------------------------------------------------------------------------- AJ배합
+
+    /**
+     * 제조지시조회(팝업)
+     * @param proc  프로시져
+     * @param m_date 제조지시일자
+     * @param equ_code 설비코드
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MixMrcpListModel> mrcp_list(
+            @Query("proc") String proc,
+            @Query("param1") String m_date,
+            @Query("param2") String equ_code
+    );
+
+    /**
+     * 제조지시상세
+     * @param proc  프로시져
+     * @param slip_no 제조지시번호
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MixDetailList> mrcp_Detail_list(
+            @Query("proc") String proc,
+            @Query("param1") String slip_no
+    );
+
+    /**
+     * 바코드스캔
+     * @param proc  프로시져
+     * @param slip_no 제조지시번호
+     * @param equ_code 바코드스캔
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MixBarcodeScan> mix_equ(
+            @Query("proc") String proc,
+            @Query("param1") String slip_no,
+            @Query("param2") String equ_code
+    );
+
+
+
+
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------AJ배합
+
+
+
+
 
     /**
      * 창고 리스트
