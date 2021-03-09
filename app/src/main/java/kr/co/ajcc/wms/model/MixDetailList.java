@@ -19,9 +19,9 @@ public class MixDetailList extends ResultModel {
         //지시일자
         String mrcp_date;
         //지시순번1
-        String mrcp_no1;
+        int mrcp_no1;
         //지시순번2
-        String mrcp_no2;
+        int mrcp_no2;
         //품목코드
         String itm_code;
         //품목명
@@ -33,7 +33,7 @@ public class MixDetailList extends ResultModel {
         //설비명
         String equ_name;
         //제조량
-        int mrcp_qty;
+        float mrcp_qty;
         //제조로트번호
         String mrcp_lotno;
         //스캔수량
@@ -59,19 +59,19 @@ public class MixDetailList extends ResultModel {
             this.mrcp_date = mrcp_date;
         }
 
-        public String getMrcp_no1() {
+        public int getMrcp_no1() {
             return mrcp_no1;
         }
 
-        public void setMrcp_no1(String mrcp_no1) {
+        public void setMrcp_no1(int mrcp_no1) {
             this.mrcp_no1 = mrcp_no1;
         }
 
-        public String getMrcp_no2() {
+        public int getMrcp_no2() {
             return mrcp_no2;
         }
 
-        public void setMrcp_no2(String mrcp_no2) {
+        public void setMrcp_no2(int mrcp_no2) {
             this.mrcp_no2 = mrcp_no2;
         }
 
@@ -115,11 +115,11 @@ public class MixDetailList extends ResultModel {
             this.equ_name = equ_name;
         }
 
-        public int getMrcp_qty() {
+        public float getMrcp_qty() {
             return mrcp_qty;
         }
 
-        public void setMrcp_qty(int mrcp_qty) {
+        public void setMrcp_qty(float mrcp_qty) {
             this.mrcp_qty = mrcp_qty;
         }
 

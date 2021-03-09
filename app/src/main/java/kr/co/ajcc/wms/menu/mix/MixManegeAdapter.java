@@ -2,6 +2,7 @@ package kr.co.ajcc.wms.menu.mix;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,47 +22,51 @@ import kr.co.ajcc.wms.model.MixBarcodeScan;
 
 public class MixManegeAdapter extends RecyclerView.Adapter<MixManegeAdapter.ViewHolder> {
 
-    List<MixBarcodeScan.Items> itemsList;
-    Activity mActivity;
-    Handler mHandler = null;
-    TwoBtnPopup mPopup;
+        List<MixBarcodeScan.Items> itemsList;
+        Activity mActivity;
+        Handler mHandler = null;
+        TwoBtnPopup mPopup;
 
-    public MixManegeAdapter(Activity context) {
+public MixManegeAdapter(Activity context) {
         mActivity = context;
-    }
+        }
 
-    public void setData(List<MixBarcodeScan.Items> list) {
+public void setData(List<MixBarcodeScan.Items> list) {
         itemsList = list;
-    }
+        }
 
-    public void addData(MixBarcodeScan.Items item) {
+public void setRetHandler(Handler h){
+        this.mHandler = h;
+        }
+
+public void addData(MixBarcodeScan.Items item) {
         if (itemsList == null) itemsList = new ArrayList<>();
         itemsList.add(item);
-    }
+        }
 
-    public void setSumHandler(Handler h){
+public void setSumHandler(Handler h){
         this.mHandler = h;
-    }
+        }
 
-    public void clearData() {
+public void clearData() {
         if (itemsList != null) itemsList.clear();
-    }
+        }
 
-    public List<MixBarcodeScan.Items> getData() {
+public List<MixBarcodeScan.Items> getData() {
         return itemsList;
-    }
+        }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int position) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_product_picking, viewGroup, false);
+@Override
+public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int position) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_mix_manage, viewGroup, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
-    }
+        }
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+@Override
+public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        final MixBarcodeScan.Items item = itemsList.get(position);
+final MixBarcodeScan.Items item = itemsList.get(position);
 
         //holder.tv_no.setText(""+(position+1)+".");
         holder.tv_code.setText(item.getItm_code());
@@ -87,30 +92,47 @@ public class MixManegeAdapter extends RecyclerView.Adapter<MixManegeAdapter.View
             }
         });*/
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return (null == itemsList ? 0 : itemsList.size());
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tv_code;
-        TextView tv_name;
-        TextView tv_size;
-        TextView tv_serial;
-        TextView tv_qty;
-
-
-        public ViewHolder(View view) {
-            super(view);
-            tv_code = view.findViewById(R.id.tv_code);
-            tv_name = view.findViewById(R.id.tv_name);
-            tv_size = view.findViewById(R.id.tv_size);
-            tv_serial = view.findViewById(R.id.tv_serial);
-            tv_qty = view.findViewById(R.id.tv_qty);
-
         }
+
+@Override
+public int getItemCount() {
+        return (null == itemsList ? 0 : itemsList.size());
+        }
+
+public class ViewHolder extends RecyclerView.ViewHolder {
+
+    TextView tv_code;
+    TextView tv_name;
+    TextView tv_size;
+    TextView tv_serial;
+    TextView tv_qty;
+
+
+    public ViewHolder(View view) {
+        super(view);
+        tv_code = view.findViewById(R.id.tv_code);
+        tv_name = view.findViewById(R.id.tv_name);
+        tv_size = view.findViewById(R.id.tv_size);
+        tv_serial = view.findViewById(R.id.tv_serial);
+        tv_qty = view.findViewById(R.id.tv_qty);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //Utils.Toast(mActivity, itemsList.get(getAdapterPosition()).getItm_name()+" 피킹 페이지 이동");
+                    Message msg = new Message();
+                    msg.obj = itemsList.get(getAdapterPosition());
+                    msg.what = getAdapterPosition();
+                    mHandler.sendMessage(msg);
+                } catch (Exception e){
+                    Utils.Log(e.getMessage());
+                }
+            }
+        });
+
     }
+
+
+}
 }

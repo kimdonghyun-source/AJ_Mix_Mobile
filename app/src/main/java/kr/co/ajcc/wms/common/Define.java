@@ -6,6 +6,8 @@ public class Define {
     public static final int MENU_MIX = 1;
     //배합투입관리
     public static final int MENU_MIX_MANAGE = 11;
+    //배합투입설비
+    public static final int MENU_MIX_EQU = 12;
 
     /*//로케이션 이동
     public static final int MENU_LOCATION = 2;
@@ -35,6 +37,8 @@ public class Define {
     public static final String TAG_MIX = "mix";
     //배합투입관리
     public static final String TAG_MIX_MANAGE = "mix_manage";
+    //배합투입설비
+    public static final String TAG_MIX_EQU = "mix_equ";
 
     /*//로케이션 이동
     public static final String TAG_LOCATION = "location";

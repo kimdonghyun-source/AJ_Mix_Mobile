@@ -187,7 +187,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="투입 품목의 바코드 SN을 스캔하세요"
+            android:text="투입 설비의 바코드 SN을 스캔하세요"
             android:gravity="center"
             android:textSize="15dp"/>
 
@@ -230,14 +230,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/print_grid" />
-
-
-        <ImageButton
-            android:id="@+id/btn_next"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:src="@drawable/menu_mix_bt2" />
 
         <ImageView
             android:layout_width="match_parent"

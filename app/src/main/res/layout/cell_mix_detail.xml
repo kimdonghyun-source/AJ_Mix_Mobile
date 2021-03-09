@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:paddingTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -18,7 +19,6 @@
             android:layout_gravity="center|left"
             android:gravity="center"
             android:textSize="20dp"
-            android:textColor="@color/black"
             android:text="코드 :"/>
 
         <TextView
@@ -32,26 +32,26 @@
             android:textSize="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textColor="@color/color_666666"/>
+            android:textColor="@color/black"/>
 
 
 
     </LinearLayout>
 
     <LinearLayout
+        android:paddingTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="30dp"
             android:layout_gravity="center|left"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:text="품명 :"/>
+            android:text="품명 :"
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -62,10 +62,11 @@
             android:gravity="left"
             android:paddingLeft="5dp"
             android:textSize="20dp"
-            android:textColor="@color/color_666666"/>
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <LinearLayout
+        android:paddingTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -77,7 +78,6 @@
             android:layout_gravity="center|left"
             android:gravity="center"
             android:textSize="20dp"
-            android:textColor="@color/black"
             android:text="규격 :"/>
 
         <TextView
@@ -91,10 +91,11 @@
             android:textSize="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textColor="@color/color_666666"/>
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <LinearLayout
+        android:paddingTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -106,7 +107,7 @@
             android:layout_gravity="center|left"
             android:gravity="center"
             android:textSize="20dp"
-            android:textColor="@color/black"
+
             android:text="배합횟수 :"/>
 
         <TextView
@@ -120,7 +121,7 @@
             android:textSize="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textColor="@color/color_666666"/>
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/tv_all_cnt"
@@ -132,11 +133,12 @@
             android:gravity="center"
             android:paddingLeft="5dp"
             android:singleLine="true"
-            android:textColor="@color/color_666666"
+            android:textColor="@color/black"
             android:textSize="20dp" />
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -148,21 +150,39 @@
             android:layout_gravity="center|left"
             android:gravity="center"
             android:textSize="20dp"
-            android:textColor="@color/black"
             android:text="작업자 :"/>
 
+        <FrameLayout
+            android:id="@+id/f_gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5">
+
+            <Spinner
+                android:id="@+id/tv_emp_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|left"
+                android:layout_weight="3"
+                android:background="@drawable/popup_inputbox2"
+                android:fadingEdge="none" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:src="@drawable/popup_bt_dropdown"
+            android:background="@android:color/transparent"/>
+        </FrameLayout>
+
         <TextView
-            android:id="@+id/tv_emp_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:layout_gravity="center|left"
-            android:gravity="left"
-            android:paddingLeft="5dp"
-            android:textSize="20dp"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:textColor="@color/color_666666"/>
+            android:layout_weight="0.5"/>
+
+        <TextView
+            android:id="@+id/tv_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
     </LinearLayout>
 
 </LinearLayout>

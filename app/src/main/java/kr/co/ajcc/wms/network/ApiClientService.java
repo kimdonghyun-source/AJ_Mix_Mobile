@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import kr.co.ajcc.wms.BuildConfig;
 import kr.co.ajcc.wms.model.CustomerInfoModel;
 import kr.co.ajcc.wms.model.DeliveryOrderModel;
+import kr.co.ajcc.wms.model.EmpListModel;
 import kr.co.ajcc.wms.model.InventoryModel;
 import kr.co.ajcc.wms.model.LocationModel;
 import kr.co.ajcc.wms.model.LotItemsModel;
@@ -13,6 +14,7 @@ import kr.co.ajcc.wms.model.MaterialOutDetailModel;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
 import kr.co.ajcc.wms.model.MixDetailList;
 import kr.co.ajcc.wms.model.MixBarcodeScan;
+import kr.co.ajcc.wms.model.MixEquModel;
 import kr.co.ajcc.wms.model.MixMrcpListModel;
 import kr.co.ajcc.wms.model.PalletSnanModel;
 import kr.co.ajcc.wms.model.ResultModel;
@@ -76,23 +78,70 @@ public interface ApiClientService {
             @Query("param1") String slip_no
     );
 
+
     /**
      * 바코드스캔
      * @param proc  프로시져
-     * @param slip_no 제조지시번호
-     * @param equ_code 바코드스캔
+     * @param slip_no 제조지시일자
+     * @param barcode 설비코드
      * @return
      */
     @POST("R2JsonProc.asp")
-    Call<MixBarcodeScan> mix_equ(
+    Call<MixBarcodeScan> barcode_list(
             @Query("proc") String proc,
             @Query("param1") String slip_no,
-            @Query("param2") String equ_code
+            @Query("param2") String barcode
     );
 
+    /**
+     * 바코드스캔
+     * @param proc  프로시져
+     * @param barcode 설비코드
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MixEquModel> mix_equ_list(
+            @Query("proc") String proc,
+            @Query("param1") String barcode
+    );
 
+    /**
+     * 설비 리스트
+     * @param proc
+     * @param code
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<MixEquModel> postEqucode(
+            @Query("proc") String proc,
+            @Query("param1") String code
+    );
 
+    /**
+     * 사원찾기
+     * @param proc
+     * @param code
+     * @return
+     */
+    @POST("R2JsonProc.asp")
+    Call<EmpListModel> postEmpList(
+            @Query("proc") String proc,
+            @Query("param1") String code
+    );
 
+    //제품출고 저장
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_mix_job_save.asp")
+    Call<ResultModel> Mix_postsend(
+            @Body RequestBody body
+    );
+
+    //배합완료 최종
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    @POST("R2JsonProc_mix_job_finish.asp")
+    Call<ResultModel> Mix_postFinish(
+            @Body RequestBody body
+    );
 
 
 

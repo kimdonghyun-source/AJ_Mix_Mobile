@@ -100,8 +100,7 @@
                         android:layout_gravity="right|center"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        android:background="@color/white"
-                        android:fadingEdge="none" />
+                        android:background="@color/white"/>
                 </LinearLayout>
             </LinearLayout>
 

@@ -32,8 +32,7 @@ import kr.co.ajcc.wms.custom.CommonFragment;
 import kr.co.ajcc.wms.menu.config.ConfigFragment;
 
 
-
-
+import kr.co.ajcc.wms.menu.mix.MixEquFragment;
 import kr.co.ajcc.wms.menu.mix.MixFragment;
 
 
@@ -107,6 +106,8 @@ public class BaseActivity extends CommonCompatActivity {
 
         Bundle args = getIntent().getBundleExtra("args");
 
+        Bundle args1 = getIntent().getBundleExtra("args1");
+
         mSelectMenu = menu-2;
 
         switch (menu){
@@ -123,6 +124,17 @@ public class BaseActivity extends CommonCompatActivity {
                 CommonFragment fragment = new MixManageFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_MIX_MANAGE, R.id.fl_content);
+                break;
+            }
+
+            case Define.MENU_MIX_EQU: {
+                CommonFragment fragment = new MixEquFragment();
+                CommonFragment fragment1 = new MixEquFragment();
+                fragment.setArguments(args);
+                fragment1.setArguments(args1);
+                replaceContent(fragment, Define.TAG_MIX_EQU, R.id.fl_content);
+                replaceContent(fragment1, Define.TAG_MIX_EQU, R.id.fl_content);
+                break;
             }
             /*case Define.MENU_LOCATION: {
                 CommonFragment fragment = new LocationFragment();
@@ -203,7 +215,14 @@ public class BaseActivity extends CommonCompatActivity {
 
             case Define.MENU_MIX_MANAGE: {
                 image = R.drawable.menu_mix_title2;
+                break;
             }
+
+            case Define.MENU_MIX_EQU: {
+                image = R.drawable.menu_mix_title3;
+                break;
+            }
+
             /*case Define.MENU_LOCATION: {
                 image = R.drawable.menu_moveloc_title;
                 break;

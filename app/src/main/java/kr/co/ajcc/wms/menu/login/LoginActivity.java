@@ -78,6 +78,7 @@ public class LoginActivity extends CommonCompatActivity {
         bt_check.setSelected(isSave);
         if(isSave) {
             String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+            String emp_Code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.EMP_CODE.name(), "");
             et_user_id.setText(userID);
         }
 

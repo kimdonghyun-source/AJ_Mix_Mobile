@@ -9,7 +9,7 @@ public class SharedData {
 
     //아이디 저장 여부, 아이디, 비밀번호
     public enum UserValue{
-        IS_LOGIN, USER_ID, SAVE_ID
+        IS_LOGIN, USER_ID, SAVE_ID, EMP_CODE
     }
 
     public static boolean setSharedData(Context context, String strKey, Object objData){

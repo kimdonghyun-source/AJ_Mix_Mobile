@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,28 +33,36 @@ import kr.co.ajcc.wms.common.UtilDate;
 import kr.co.ajcc.wms.common.Utils;
 import kr.co.ajcc.wms.model.MaterialOutListModel;
 import kr.co.ajcc.wms.model.MixDetailList;
+import kr.co.ajcc.wms.model.MixEquModel;
 import kr.co.ajcc.wms.model.MixMrcpListModel;
 import kr.co.ajcc.wms.model.ResultModel;
 import kr.co.ajcc.wms.model.WarehouseModel;
 import kr.co.ajcc.wms.network.ApiClientService;
 import kr.co.ajcc.wms.spinner.SpinnerPopupAdapter;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OutMeterialListPopup {
     Activity mActivity;
+
     Dialog dialog;
     List<MixMrcpListModel.Items> mMixList;
     List<MixDetailList.Items> mMixDetailList;
+    List<MixEquModel.Items> mEquList;
+    MixEquModel mEquModel;
     Handler mHandler;
+
     Spinner mSpinner;
     int mSpinnerSelect = 0;
+
     TextView tv_date;
     ListView mListView;
     ListAdapter mAdapter;
 
     public OutMeterialListPopup(Activity activity, List<MixDetailList.Items> list, int title, Handler handler) {
+        requestLocation("");
         mActivity = activity;
         mMixDetailList = list;
         mHandler = handler;
@@ -74,7 +84,8 @@ public class OutMeterialListPopup {
         }
     }
 
-    private void showPopUpDialog(Activity activity, int title) {
+    private void showPopUpDialog(final Activity activity, int title) {
+
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -100,19 +111,21 @@ public class OutMeterialListPopup {
         tv_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(mActivity, dateListener, Utils.stringToInt(date.replace("-", "").substring(0, 4)), Utils.stringToInt(date.replace("-", "").substring(4, 6))-1, Utils.stringToInt(date.replace("-", "").substring(6, 8)));
+                DatePickerDialog dialog = new DatePickerDialog(mActivity, dateListener, Utils.stringToInt(date.replace("-", "").substring(0, 4)), Utils.stringToInt(date.replace("-", "").substring(4, 6)) - 1, Utils.stringToInt(date.replace("-", "").substring(6, 8)));
                 dialog.show();
             }
         });
 
-        List<String> list = new ArrayList<>();
-      /*  for (MixMrcpListModel.Items item : mMixList)
-            list.add(item.getEqu_name());*/
-        
+
+        List<String> spinnerlist = new ArrayList<>();
+        spinnerlist.add("");
+
         mSpinner = dialog.findViewById(R.id.spinner);
-        SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, list, mSpinner);
+        SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, spinnerlist, mSpinner);
         mSpinner.setAdapter(spinnerAdapter);
-        mSpinner.setOnItemSelectedListener(onItemSelectedListener);
+        //mSpinner.setOnItemSelectedListener(onItemSelectedListener);
+        mSpinner.setSelection(mSpinnerSelect);
+
 
         mListView = dialog.findViewById(R.id.list);
         mAdapter = new ListAdapter();
@@ -121,7 +134,7 @@ public class OutMeterialListPopup {
         dialog.findViewById(R.id.bt_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( tv_date.getText().toString() != null)
+                if (tv_date.getText().toString() != null)
                     requestOutOrderList();
             }
         });
@@ -133,14 +146,45 @@ public class OutMeterialListPopup {
             }
         });
 
+        mSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                requestLocation("");
+
+                List<String> list = new ArrayList<>();
+                for (MixEquModel.Items items : mEquList) {
+                    list.add(items.getEqu_code());
+                }
+                SpinnerPopupAdapter spinnerAdapter = new SpinnerPopupAdapter(activity, list, mSpinner);
+                mSpinner.setAdapter(spinnerAdapter);
+                mSpinner.setOnItemSelectedListener(onItemSelectedListener1);
+                mSpinner.setSelection(mSpinnerSelect);
+
+                return false;
+            }
+        });
+
         dialog.show();
+
     }
 
     DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            String date = String.format("%04d", year)+"-"+String.format("%02d", monthOfYear+1)+"-"+String.format("%02d", dayOfMonth);
+            String date = String.format("%04d", year) + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth);
             tv_date.setText(date);
+        }
+    };
+
+    AdapterView.OnItemSelectedListener onItemSelectedListener1 = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            mSpinnerSelect = position;
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
         }
     };
 
@@ -150,10 +194,11 @@ public class OutMeterialListPopup {
             mSpinnerSelect = position;
 
             MixMrcpListModel.Items item = mMixList.get(position);
-            //String item = (String) mSpinner.getSelectedItem();
 
             mActivity = null;
             mAdapter.notifyDataSetChanged();
+
+            //requestLocation("");
         }
 
         @Override
@@ -162,12 +207,11 @@ public class OutMeterialListPopup {
     };
 
 
-
     class ListAdapter extends BaseAdapter {
         LayoutInflater mInflater;
         List<MixMrcpListModel.Items> mList;
 
-        public void setData(List<MixMrcpListModel.Items> list){
+        public void setData(List<MixMrcpListModel.Items> list) {
             mList = list;
         }
 
@@ -185,7 +229,7 @@ public class OutMeterialListPopup {
 
 
         @Override
-        public MixMrcpListModel.Items getItem(int position){
+        public MixMrcpListModel.Items getItem(int position) {
             return mList.get(position);
         }
 
@@ -242,28 +286,28 @@ public class OutMeterialListPopup {
     private void requestOutOrderList() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<MixMrcpListModel> call = service.mrcp_list("sp_pda_mix_mrcp_list", tv_date.getText().toString().replace("-", ""), "");
+        Call<MixMrcpListModel> call = service.mrcp_list("sp_pda_mix_mrcp_list", tv_date.getText().toString().replace("-", ""), mSpinner.getSelectedItem().toString());
 
         call.enqueue(new Callback<MixMrcpListModel>() {
             @Override
             public void onResponse(Call<MixMrcpListModel> call, Response<MixMrcpListModel> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     MixMrcpListModel model = response.body();
                     //Utils.Log("model ==> : "+new Gson().toJson(model));
                     if (model != null) {
-                        if(model.getFlag() == ResultModel.SUCCESS) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
                             ListView listView = dialog.findViewById(R.id.list);
                             ListAdapter adapter = new ListAdapter();
                             adapter.setData(model.getItems());
                             listView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
-                        }else{
+                        } else {
                             Utils.Toast(mActivity, model.getMSG());
                         }
                     }
-                }else{
+                } else {
                     Utils.LogLine(response.message());
-                    Utils.Toast(mActivity, response.code()+" : "+response.message());
+                    Utils.Toast(mActivity, response.code() + " : " + response.message());
                 }
             }
 
@@ -275,4 +319,43 @@ public class OutMeterialListPopup {
         });
     }   //Close 출고검색
 
+
+    /**
+     * 설비검색
+     */
+    private void requestLocation(String code) {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        Call<MixEquModel> call = service.postEqucode("sp_pda_mix_equ", "");
+
+        call.enqueue(new Callback<MixEquModel>() {
+            @Override
+            public void onResponse(Call<MixEquModel> call, Response<MixEquModel> response) {
+                if (response.isSuccessful()) {
+                    MixEquModel model = response.body();
+
+                    //Utils.Log("model ==> : "+new Gson().toJson(model));
+                    if (model != null) {
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+                            //MixEquModel.Items o = mEquModel.getItems().get(0);
+                            mEquList = model.getItems();
+                            mAdapter.notifyDataSetChanged();
+
+                        } else {
+                            Utils.Toast(mActivity, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mActivity, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MixEquModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mActivity, mActivity.getString(R.string.error_network));
+            }
+        });
+    }
 }
